@@ -18,7 +18,7 @@ class UserInfo(db.Model):
             'spendings': [spending.to_dict() for spending in self.spendings]
         }
 
-
+# komentar
 class UserSpending(db.Model):
     __tablename__ = 'user_spending'
     # id = db.Column(db.Integer, primary_key=True)

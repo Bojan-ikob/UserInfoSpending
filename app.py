@@ -11,7 +11,7 @@ from pymongo import MongoClient
 app = Flask(__name__)
 
 migrate = Migrate(app, db)
-
+# komentar
 # MongoDB server
 # uri = "mongodb+srv://petkovskibojan8891:f0y4QHEggv8ox8cB@cluster0.iiujb.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
 # client = MongoClient(uri, server_api=ServerApi('1'))
