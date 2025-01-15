@@ -23,8 +23,8 @@ class UserSpending(db.Model):
     __tablename__ = 'user_spending'
     # id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user_info.user_id'), primary_key = True)
-    money_spent = db.Column(db.Float, nullable=False)
-    year = db.Column(db.Integer, nullable=False)
+    money_spent = db.Column(db.Float, nullable=False,  primary_key = True)
+    year = db.Column(db.Integer, nullable=False,  primary_key = True)
 
     def to_dict(self):
         return {
