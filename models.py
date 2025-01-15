@@ -2,10 +2,10 @@ from extensions import db
 
 class UserInfo(db.Model):
     __tablename__ = 'user_info'
-    user_id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
     name = db.Column(db.String(100), nullable=False)
     email = db.Column(db.String(100), nullable=False, unique=True)
-    age = db.Column(db.Integer)
+    age = db.Column(db.Integer, nullable=False)
 
     spendings = db.relationship('UserSpending', backref='user', lazy=True)
 
@@ -22,9 +22,9 @@ class UserInfo(db.Model):
 class UserSpending(db.Model):
     __tablename__ = 'user_spending'
     # id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('user_info.user_id'),primary_key=True)
-    money_spent = db.Column(db.Float)
-    year = db.Column(db.Integer)
+    user_id = db.Column(db.Integer, db.ForeignKey('user_info.user_id'), primary_key = True)
+    money_spent = db.Column(db.Float, nullable=False)
+    year = db.Column(db.Integer, nullable=False)
 
     def to_dict(self):
         return {

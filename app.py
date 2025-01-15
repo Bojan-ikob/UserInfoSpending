@@ -1,16 +1,23 @@
-from flask import Flask, request, jsonify, render_template
-from extensions import db
+from flask import Flask, request, jsonify
+from extensions import db, migrate
 from models import UserInfo, UserSpending
-from pymongo.mongo_client import MongoClient
-from pymongo.server_api import ServerApi
-from flask_migrate import Migrate
-from flask_sqlalchemy import SQLAlchemy
-from flask_pymongo import PyMongo
 from pymongo import MongoClient
+import os
 
 app = Flask(__name__)
 
-migrate = Migrate(app, db)
+
+
+
+
+
+
+
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///users_vouchers.db'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
+db.init_app(app)
+migrate.init_app(app, db)
 
 # MongoDB server
 # uri = "mongodb+srv://petkovskibojan8891:f0y4QHEggv8ox8cB@cluster0.iiujb.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
@@ -23,13 +30,9 @@ client = MongoClient("mongodb://localhost:27017/")
 mongo_db = client["ProjectUserSpending"]
 users_vouchers_collection = mongo_db["user_voucher_collection"]
 
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///users_vouchers.db'
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
-db.init_app(app)
-
-with app.app_context():
-    db.create_all()
+# with app.app_context():
+#     db.create_all()
 
 @app.route("/")
 def home_page_view():
@@ -44,6 +47,14 @@ def get_users():
 def get_user(id):
     user = UserInfo.query.get_or_404(id)
     return jsonify(user.to_dict())
+
+@app.route('/user_info', methods = ['POST'])
+def add_user():
+    data = request.get_json()
+    new_user = UserInfo(name = data['name'], email = data['email'], age = data['age'])
+    db.session.add(new_user)
+    db.session.commit()
+    return jsonify(new_user.to_dict()),201
 
 @app.route('/user_spending', methods = ['POST'])
 def add_spending():
@@ -110,5 +121,13 @@ def average_spending_by_age():
 
 
 
+# if __name__ == '__main__':
+#     app.run(debug=True, port=5001)
+os.environ['FLASK_APP'] = 'app.py'
 if __name__ == '__main__':
+    flask_app = os.getenv('FLASK_APP')
+    if flask_app:
+        print(f"FLASK_APP is set to: {flask_app}")
+    else:
+        print("FLASK_APP is not set. Please set it using 'export FLASK_APP=app.py' (Linux/Mac) or 'set FLASK_APP=app.py' (Windows).")
     app.run(debug=True, port=5001)
