@@ -21,14 +21,12 @@ class UserInfo(db.Model):
 
 class UserSpending(db.Model):
     __tablename__ = 'user_spending'
-    # id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user_info.user_id'), primary_key = True)
     money_spent = db.Column(db.Float, nullable=False,  primary_key = True)
     year = db.Column(db.Integer, nullable=False,  primary_key = True)
 
     def to_dict(self):
         return {
-            # 'id':self.id,
             'user_id':self.user_id,
             'money_spent': self.money_spent,
             'year': self.year
