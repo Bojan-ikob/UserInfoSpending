@@ -5,7 +5,6 @@ from pymongo import MongoClient, errors
 
 app = Flask(__name__)
 
-
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///users_vouchers.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
@@ -14,18 +13,12 @@ db.init_app(app)
 from pymongo import MongoClient
 from pymongo.server_api import ServerApi
 
-
 cloud_uri = "mongodb+srv://petkovskibojan8891:f0y4QHEggv8ox8cB@cluster0.iiujb.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
-
-
 cloud_client = MongoClient(cloud_uri, server_api=ServerApi('1'), serverSelectionTimeoutMS=5000)
 cloud_db = cloud_client["ProjectUserSpending"]
 cloud_collection = cloud_db["user_voucher_collection"]
 
-
 local_uri = "mongodb://localhost:27017/"
-
-
 local_client = MongoClient(local_uri, serverSelectionTimeoutMS=5000)
 local_db = local_client["ProjectUserSpending"]
 local_collection = local_db["user_voucher_collection"]
