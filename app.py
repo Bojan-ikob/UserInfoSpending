@@ -1,7 +1,11 @@
 from flask import Flask, request, jsonify
 from extensions import db
 from models import UserInfo, UserSpending
-from pymongo import MongoClient, errors
+from pymongo import errors
+from telegram_bot import send_message
+import asyncio
+
+
 
 app = Flask(__name__)
 
@@ -23,6 +27,7 @@ local_client = MongoClient(local_uri, serverSelectionTimeoutMS=5000)
 local_db = local_client["ProjectUserSpending"]
 local_collection = local_db["user_voucher_collection"]
 
+
 def add_data_to_both(datapoint):
     try:
         if not cloud_collection.find_one({"user_id": datapoint["user_id"]}):
@@ -41,9 +46,9 @@ def add_data_to_both(datapoint):
     except errors.PyMongoError as e:
         print(f"Failed to add data to local MongoDB: {e}")
 
-
 with app.app_context():
     db.create_all()
+
 
 @app.route("/")
 def home_page_view():
@@ -140,6 +145,11 @@ def average_spending_by_age():
         else:
             average_spending = 0
         average_spending_by_age[group] = average_spending
+    message = "Average Spending by Age Group:\n"
+    for group, avg_spending in average_spending_by_age.items():
+        message += f"{group}: {avg_spending}\n"
+
+    asyncio.run(send_message(message))
     return jsonify(average_spending_by_age)
 
 
