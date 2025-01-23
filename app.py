@@ -6,7 +6,6 @@ from telegram_bot import send_message
 import asyncio
 
 
-
 app = Flask(__name__)
 
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///users_vouchers.db'
